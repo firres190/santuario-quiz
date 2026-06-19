@@ -11,7 +11,7 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('init', '2628120420939405');
 fbq('track', 'PageView');
 </script>
 
@@ -152,6 +152,70 @@ fbq('track', 'PageView');
     cursor: not-allowed;
   }
 
+  .dest-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .dest-btn {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-primary);
+    padding: 18px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .dest-btn.selected {
+    border-color: var(--accent-light);
+    background: #1d1813;
+  }
+
+  .extra-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin-top: 4px;
+  }
+
+  .field-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: left;
+    letter-spacing: 0.5px;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    padding: 9px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .chip.selected {
+    border-color: var(--accent-light);
+    background: #1d1813;
+    color: var(--text-primary);
+  }
+
   .fade-in {
     animation: fadeIn 0.35s ease both;
   }
@@ -179,20 +243,15 @@ fbq('track', 'PageView');
 
   const questions = [
     {
-      id: 'estado_alma',
-      text: '¿Cómo está tu alma en este momento?',
-      type: 'choice',
-      options: [
-        'En paz, pero buscando algo más',
-        'Cansada, cargando mucho peso',
-        'Confundida, sin saber qué hacer',
-        'Con miedo, sin saber por qué'
-      ]
+      id: 'destinatario',
+      text: '¿Para quién es esta oración?',
+      type: 'combo_destinatario'
     },
     {
       id: 'area_vida',
       text: '¿Qué es lo que más pesa en tu corazón hoy?',
       type: 'choice',
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal',
       options: [
         { label: 'Mi salud o la de alguien que amo', santo: 'San Rafael Arcángel' },
         { label: 'Un miedo que no me deja en paz', santo: 'San Miguel Arcángel' },
@@ -204,42 +263,12 @@ fbq('track', 'PageView');
       id: 'emocion',
       text: 'Si pudieras decirle una sola frase a Dios ahora mismo, ¿cuál sería el sentimiento detrás?',
       type: 'choice',
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal',
       options: [
-        'Ayúdame, ya no puedo sola/o',
+        'Ayúdame, ya no puedo más',
         'Dame fuerzas para seguir',
         'Perdóname o ayúdame a perdonar',
         'Gracias, aunque esté sufriendo'
-      ]
-    },
-    {
-      id: 'tiempo',
-      text: '¿Desde cuándo cargas con esto?',
-      type: 'choice',
-      options: [
-        'Hace pocos días',
-        'Hace varios meses',
-        'Hace años',
-        'No recuerdo un momento en que no estuviera ahí'
-      ]
-    },
-    {
-      id: 'devocion',
-      text: '¿Le tienes una devoción especial a algún santo o figura?',
-      type: 'choice',
-      options: [
-        'San Rafael Arcángel',
-        'San Miguel Arcángel',
-        'La Virgen María',
-        'Ninguno en particular, solo creo en Dios'
-      ]
-    },
-    {
-      id: 'destinatario',
-      text: '¿Esta oración es para ti o para otra persona?',
-      type: 'choice',
-      options: [
-        { label: 'Es para mí', tipo: 'personal' },
-        { label: 'Es para otra persona', tipo: 'otro' }
       ]
     },
     {
@@ -250,28 +279,22 @@ fbq('track', 'PageView');
       showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal'
     },
     {
-      id: 'nombre_destinatario',
-      text: '¿Cómo se llama esa persona?',
-      type: 'text',
-      placeholder: 'Su nombre',
-      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro'
-    },
-    {
-      id: 'parentesco',
-      text: '¿Qué es esa persona para ti?',
+      id: 'motivo_otro',
+      text: '¿Por qué deseas interceder por ella?',
       type: 'choice',
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro',
       options: [
-        'Mi madre o mi padre',
-        'Mi hijo o mi hija',
-        'Mi pareja',
-        'Un familiar cercano',
-        'Un amigo o amiga'
-      ],
-      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro'
+        { label: 'Por su salud', santo: 'San Rafael Arcángel' },
+        { label: 'Por su dinero o trabajo', santo: 'San Rafael Arcángel' },
+        { label: 'Por protección espiritual', santo: 'San Miguel Arcángel' },
+        { label: 'Por su paz y consuelo', santo: 'Virgen María' },
+        { label: 'Por una causa difícil', santo: 'Santa Rita de Casia' }
+      ]
     },
     {
       id: 'listo',
       text: '¿Estás listo o lista para recibir tu oración?',
+      textOtro: '¿Estás listo o lista para recibir la sanación?',
       type: 'choice',
       options: [
         'Sí, la necesito ahora',
@@ -293,13 +316,38 @@ fbq('track', 'PageView');
     const container = document.getElementById('quiz-container');
     const progressPct = Math.round((visibleIndex / visible.length) * 100);
 
+    const esParaOtroActual = answers.destinatario && answers.destinatario.tipo === 'otro';
+    const qtext = (esParaOtroActual && q.textOtro) ? q.textOtro : q.text;
+
     let breadcrumbHtml = '';
-    if (currentIndex > 0 && answers.area_vida) {
-      breadcrumbHtml = `<p class="breadcrumb">Elegiste: ${answers.area_vida.label.toLowerCase()}</p>`;
+    const motivoRespondido = answers.area_vida || answers.motivo_otro;
+    if (currentIndex > 0 && motivoRespondido && q.id !== 'destinatario') {
+      breadcrumbHtml = `<p class="breadcrumb">Elegiste: ${motivoRespondido.label.toLowerCase()}</p>`;
     }
 
     let bodyHtml = '';
-    if (q.type === 'choice') {
+
+    if (q.type === 'combo_destinatario') {
+      const tipo = answers.destinatario ? answers.destinatario.tipo : null;
+      const parentescoSel = answers.parentesco ? answers.parentesco.label : null;
+      bodyHtml = `
+        <div class="dest-options">
+          <button class="dest-btn ${tipo === 'personal' ? 'selected' : ''}" onclick="setDestinatario('personal')">Es para mí</button>
+          <button class="dest-btn ${tipo === 'otro' ? 'selected' : ''}" onclick="setDestinatario('otro')">Es para otra persona</button>
+        </div>
+        <div class="extra-fields" id="extra-fields" style="display:${tipo === 'otro' ? 'flex' : 'none'}">
+          <span class="field-label">¿Cómo se llama?</span>
+          <input type="text" class="text-input" id="nombre-destinatario-input" placeholder="Su nombre" maxlength="40" value="${answers.nombre_destinatario ? answers.nombre_destinatario.label : ''}">
+          <span class="field-label">¿Qué es para ti?</span>
+          <div class="chip-row" id="parentesco-chips">
+            ${['Mi madre o mi padre', 'Mi hijo o mi hija', 'Mi pareja', 'Un familiar', 'Un amigo o amiga'].map(p =>
+              `<button class="chip ${parentescoSel === p ? 'selected' : ''}" onclick="setParentesco('${p}')">${p}</button>`
+            ).join('')}
+          </div>
+        </div>
+        <button class="continue-btn" id="continue-btn-dest" style="margin-top:8px" disabled onclick="confirmDestinatario()">Continuar</button>
+      `;
+    } else if (q.type === 'choice') {
       bodyHtml = `<div class="options">` +
         q.options.map((opt, i) => {
           const label = typeof opt === 'string' ? opt : opt.label;
@@ -320,7 +368,7 @@ fbq('track', 'PageView');
           <span class="progress-label">${visibleIndex + 1} de ${visible.length}</span>
         </div>
         ${breadcrumbHtml}
-        <p class="qtext">${q.text}</p>
+        <p class="qtext">${qtext}</p>
         ${bodyHtml}
       </div>
     `;
@@ -334,7 +382,47 @@ fbq('track', 'PageView');
       input.focus();
     }
 
-    track('ViewContent', { content_name: 'quiz_pregunta_' + (currentIndex + 1) });
+    if (q.type === 'combo_destinatario') {
+      updateDestContinueBtn();
+    }
+
+    track('ViewContent', { content_name: 'quiz_pregunta_' + (visibleIndex + 1) });
+  }
+
+  function setDestinatario(tipo) {
+    answers.destinatario = { tipo };
+    render();
+  }
+
+  function setParentesco(label) {
+    answers.parentesco = { label };
+    render();
+  }
+
+  function updateDestContinueBtn() {
+    const btn = document.getElementById('continue-btn-dest');
+    const nombreInput = document.getElementById('nombre-destinatario-input');
+    if (nombreInput) {
+      nombreInput.addEventListener('input', () => {
+        answers.nombre_destinatario = { label: nombreInput.value.trim() };
+        updateDestContinueBtn();
+      });
+    }
+    if (!btn) return;
+    const tipo = answers.destinatario ? answers.destinatario.tipo : null;
+    if (tipo === 'personal') {
+      btn.disabled = false;
+    } else if (tipo === 'otro') {
+      const nombreOk = answers.nombre_destinatario && answers.nombre_destinatario.label;
+      const parentescoOk = answers.parentesco && answers.parentesco.label;
+      btn.disabled = !(nombreOk && parentescoOk);
+    } else {
+      btn.disabled = true;
+    }
+  }
+
+  function confirmDestinatario() {
+    advance();
   }
 
   function selectOption(i) {
@@ -367,14 +455,19 @@ fbq('track', 'PageView');
   function finishQuiz() {
     track('Lead', { content_name: 'quiz_completado' });
 
-    const santo = answers.area_vida && answers.area_vida.santo ? answers.area_vida.santo : 'San Rafael Arcángel';
     const esParaOtro = answers.destinatario && answers.destinatario.tipo === 'otro';
+
+    const motivoRespondido = esParaOtro ? answers.motivo_otro : answers.area_vida;
+    const santo = motivoRespondido && motivoRespondido.santo ? motivoRespondido.santo : 'San Rafael Arcángel';
 
     const nombre = esParaOtro
       ? (answers.nombre_destinatario ? answers.nombre_destinatario.label : '')
       : (answers.nombre ? answers.nombre.label : '');
 
-    const peticion = answers.emocion ? answers.emocion.label : '';
+    const peticion = esParaOtro
+      ? (motivoRespondido ? motivoRespondido.label : '')
+      : (answers.emocion ? answers.emocion.label : '');
+
     const parentesco = esParaOtro && answers.parentesco ? answers.parentesco.label : '';
 
     const params = new URLSearchParams({
