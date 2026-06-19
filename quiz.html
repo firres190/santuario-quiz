@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santuario Divino | Descubre tu oración</title>
+
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #171614;
+    --border: #3a3833;
+    --text-primary: #f0ece2;
+    --text-secondary: #cfc9bc;
+    --text-tertiary: #8a8579;
+    --accent: #7a2e22;
+    --accent-light: #b8895a;
+    --track: #2a2925;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  .quiz-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.5rem;
+    gap: 1.75rem;
+    text-align: center;
+  }
+
+  .progress-row {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--track);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-light);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+  }
+
+  .qtext {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(19px, 4vw, 22px);
+    line-height: 1.5;
+    max-width: 440px;
+    font-weight: 500;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .option-btn {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    padding: 15px 16px;
+    border-radius: 8px;
+    font-size: 14.5px;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .option-btn:hover {
+    background: #1d1b18;
+    border-color: var(--accent-light);
+  }
+
+  .text-input {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-primary);
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+  }
+
+  .text-input:focus {
+    outline: none;
+    border-color: var(--accent-light);
+  }
+
+  .continue-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--text-primary);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .continue-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.35s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-screen" id="quiz-container"></div>
+
+<script>
+  function track(eventName, params) {
+    if (typeof fbq !== 'undefined') fbq('track', eventName, params || {});
+  }
+
+  const answers = {};
+
+  const questions = [
+    {
+      id: 'estado_alma',
+      text: '¿Cómo está tu alma en este momento?',
+      type: 'choice',
+      options: [
+        'En paz, pero buscando algo más',
+        'Cansada, cargando mucho peso',
+        'Confundida, sin saber qué hacer',
+        'Con miedo, sin saber por qué'
+      ]
+    },
+    {
+      id: 'area_vida',
+      text: '¿Qué es lo que más pesa en tu corazón hoy?',
+      type: 'choice',
+      options: [
+        { label: 'Mi salud o la de alguien que amo', santo: 'San Rafael Arcángel' },
+        { label: 'Un miedo que no me deja en paz', santo: 'San Miguel Arcángel' },
+        { label: 'Mi familia o mis hijos', santo: 'Virgen María' },
+        { label: 'Algo que necesito perdonar o soltar', santo: 'Jesús' }
+      ]
+    },
+    {
+      id: 'emocion',
+      text: 'Si pudieras decirle una sola frase a Dios ahora mismo, ¿cuál sería el sentimiento detrás?',
+      type: 'choice',
+      options: [
+        'Ayúdame, ya no puedo sola/o',
+        'Dame fuerzas para seguir',
+        'Perdóname o ayúdame a perdonar',
+        'Gracias, aunque esté sufriendo'
+      ]
+    },
+    {
+      id: 'tiempo',
+      text: '¿Desde cuándo cargas con esto?',
+      type: 'choice',
+      options: [
+        'Hace pocos días',
+        'Hace varios meses',
+        'Hace años',
+        'No recuerdo un momento en que no estuviera ahí'
+      ]
+    },
+    {
+      id: 'devocion',
+      text: '¿Le tienes una devoción especial a algún santo o figura?',
+      type: 'choice',
+      options: [
+        'San Rafael Arcángel',
+        'San Miguel Arcángel',
+        'La Virgen María',
+        'Ninguno en particular, solo creo en Dios'
+      ]
+    },
+    {
+      id: 'nombre',
+      text: '¿Cómo te llamas? Tu oración llevará tu nombre.',
+      type: 'text',
+      placeholder: 'Escribe tu nombre'
+    },
+    {
+      id: 'listo',
+      text: '¿Estás listo o lista para recibir tu oración?',
+      type: 'choice',
+      options: [
+        'Sí, la necesito ahora',
+        'Sí, con todo mi corazón'
+      ]
+    }
+  ];
+
+  let currentIndex = 0;
+
+  function render() {
+    const q = questions[currentIndex];
+    const container = document.getElementById('quiz-container');
+    const progressPct = Math.round(((currentIndex) / questions.length) * 100);
+
+    let breadcrumbHtml = '';
+    if (currentIndex > 0 && answers.area_vida) {
+      breadcrumbHtml = `<p class="breadcrumb">Elegiste: ${answers.area_vida.label.toLowerCase()}</p>`;
+    }
+
+    let bodyHtml = '';
+    if (q.type === 'choice') {
+      bodyHtml = `<div class="options">` +
+        q.options.map((opt, i) => {
+          const label = typeof opt === 'string' ? opt : opt.label;
+          return `<button class="option-btn" onclick="selectOption(${i})">${label}</button>`;
+        }).join('') +
+        `</div>`;
+    } else if (q.type === 'text') {
+      bodyHtml = `
+        <input type="text" class="text-input" id="text-answer" placeholder="${q.placeholder}" maxlength="40">
+        <button class="continue-btn" id="continue-btn" disabled onclick="submitText()">Continuar</button>
+      `;
+    }
+
+    container.innerHTML = `
+      <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;gap:1.75rem;width:100%">
+        <div class="progress-row">
+          <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
+          <span class="progress-label">${currentIndex + 1} de ${questions.length}</span>
+        </div>
+        ${breadcrumbHtml}
+        <p class="qtext">${q.text}</p>
+        ${bodyHtml}
+      </div>
+    `;
+
+    if (q.type === 'text') {
+      const input = document.getElementById('text-answer');
+      const btn = document.getElementById('continue-btn');
+      input.addEventListener('input', () => {
+        btn.disabled = input.value.trim().length === 0;
+      });
+      input.focus();
+    }
+
+    track('ViewContent', { content_name: 'quiz_pregunta_' + (currentIndex + 1) });
+  }
+
+  function selectOption(i) {
+    const q = questions[currentIndex];
+    const opt = q.options[i];
+    answers[q.id] = typeof opt === 'string' ? { label: opt } : opt;
+    advance();
+  }
+
+  function submitText() {
+    const input = document.getElementById('text-answer');
+    const value = input.value.trim();
+    if (!value) return;
+    answers[questions[currentIndex].id] = { label: value };
+    advance();
+  }
+
+  function advance() {
+    currentIndex++;
+    if (currentIndex >= questions.length) {
+      finishQuiz();
+    } else {
+      render();
+    }
+  }
+
+  function finishQuiz() {
+    track('Lead', { content_name: 'quiz_completado' });
+
+    const santo = answers.area_vida && answers.area_vida.santo ? answers.area_vida.santo : 'San Rafael Arcángel';
+    const nombre = answers.nombre ? answers.nombre.label : '';
+    const peticion = answers.emocion ? answers.emocion.label : '';
+
+    const params = new URLSearchParams({
+      nombre: nombre,
+      santo: santo,
+      peticion: peticion
+    });
+
+    window.location.href = 'loader.html?' + params.toString();
+  }
+
+  render();
+</script>
+
+</body>
+</html>

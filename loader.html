@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santuario Divino | Preparando tu oración</title>
+
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #171614;
+    --border: #3a3833;
+    --text-primary: #f0ece2;
+    --text-secondary: #a8a39a;
+    --text-tertiary: #6a665e;
+    --accent-light: #b8895a;
+    --track: #2a2925;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    max-width: 460px;
+  }
+
+  .icon-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .icon-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid #5a4632;
+    opacity: 0.5;
+  }
+
+  .icon-ring svg {
+    width: 30px;
+    height: 30px;
+    stroke: var(--accent-light);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .main-text {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--text-primary);
+  }
+
+  .sub-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 380px;
+  }
+
+  .audio-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .audio-bar svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--accent-light);
+    fill: none;
+    flex-shrink: 0;
+  }
+
+  .audio-track {
+    flex: 1;
+    height: 3px;
+    background: var(--track);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .audio-fill {
+    height: 100%;
+    background: #b8895a;
+    border-radius: 2px;
+    width: 0%;
+  }
+
+  .audio-time {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .progress-wrap {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--track);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #5a4632;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s linear;
+  }
+
+  .progress-status {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+
+<div class="loader-screen">
+  <div class="icon-ring">
+    <svg viewBox="0 0 24 24"><path d="M12 2C12 2 7 8 7 13a5 5 0 0010 0c0-5-5-11-5-11z"/></svg>
+  </div>
+
+  <p class="main-text" id="main-text">Estoy preparando tu oración.</p>
+  <p class="sub-text">Dios ya conoce tu corazón. Lo que vas a recibir es solo para ti.</p>
+
+  <div class="audio-bar">
+    <svg id="play-icon" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+    <div class="audio-track"><div class="audio-fill" id="audio-fill"></div></div>
+    <span class="audio-time" id="audio-time">0:00</span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-status" id="progress-status">Encendiendo una vela por ti...</span>
+  </div>
+</div>
+
+<audio id="loader-audio" src="assets/loader-narracion.mp3" preload="auto"></audio>
+
+<script>
+  function track(eventName, params) {
+    if (typeof fbq !== 'undefined') fbq('track', eventName, params || {});
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const nombre = params.get('nombre') || '';
+  const santo = params.get('santo') || 'San Rafael Arcángel';
+  const peticion = params.get('peticion') || '';
+
+  const saludo = nombre ? `${nombre}, estoy preparando tu oración a ${santo}.` : `Estoy preparando tu oración a ${santo}.`;
+  document.getElementById('main-text').textContent = saludo;
+
+  const statusMessages = [
+    'Encendiendo una vela por ti...',
+    'Llevando tu petición en oración...',
+    'Casi lista...'
+  ];
+
+  const audio = document.getElementById('loader-audio');
+  const audioFill = document.getElementById('audio-fill');
+  const audioTime = document.getElementById('audio-time');
+
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration) {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      audioFill.style.width = pct + '%';
+      const seconds = Math.floor(audio.currentTime);
+      audioTime.textContent = '0:' + (seconds < 10 ? '0' + seconds : seconds);
+    }
+  });
+
+  audio.play().catch(() => {
+    // Autoplay bloqueado por el navegador: el progreso visual sigue igual sin audio.
+  });
+
+  let progress = 0;
+  const totalDuration = 4500;
+  const stepTime = 80;
+  const totalSteps = totalDuration / stepTime;
+  let step = 0;
+
+  const progressFill = document.getElementById('progress-fill');
+  const progressStatus = document.getElementById('progress-status');
+
+  const interval = setInterval(() => {
+    step++;
+    progress = Math.min(100, Math.round((step / totalSteps) * 100));
+    progressFill.style.width = progress + '%';
+
+    if (progress > 30 && progress <= 65) {
+      progressStatus.textContent = statusMessages[1];
+    } else if (progress > 65) {
+      progressStatus.textContent = statusMessages[2];
+    }
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(finishLoader, 400);
+    }
+  }, stepTime);
+
+  function finishLoader() {
+    track('ViewContent', { content_name: 'loader_completado' });
+    const appParams = new URLSearchParams({ nombre, santo, peticion });
+    window.location.href = 'https://TU-APP-REAL.vercel.app/?' + appParams.toString();
+  }
+</script>
+
+</body>
+</html>

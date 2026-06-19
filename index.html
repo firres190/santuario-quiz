@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santuario Divino | Tu oración personalizada</title>
+<meta name="description" content="Descubre la oración que Dios preparó para ti">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #171614;
+    --border: #3a3833;
+    --text-primary: #f5f1e8;
+    --text-secondary: #cfc9bc;
+    --text-tertiary: #8a8579;
+    --accent: #7a2e22;
+    --accent-light: #b8895a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.8) 60%, rgba(10,10,10,0.97) 100%),
+      url('assets/fondo-espiritual.jpg') center 25% / cover no-repeat;
+    z-index: 0;
+  }
+
+  .brand {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    z-index: 2;
+    text-transform: uppercase;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    max-width: 560px;
+  }
+
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(24px, 5vw, 32px);
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-shadow: 0 2px 16px rgba(0,0,0,0.6);
+  }
+
+  .subtext {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 380px;
+    text-shadow: 0 1px 10px rgba(0,0,0,0.6);
+  }
+
+  .cta-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--text-primary);
+    padding: 16px 36px;
+    border-radius: 8px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.15s ease, background 0.15s ease;
+    font-family: inherit;
+    margin-top: 0.5rem;
+  }
+
+  .cta-btn:hover {
+    background: #8c3727;
+    transform: translateY(-1px);
+  }
+
+  .cta-btn:active {
+    transform: scale(0.98);
+  }
+
+  .secondary-link {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .arrow {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-content {
+      animation: fadeUp 0.9s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="brand">Santuario Divino</div>
+
+  <div class="hero-content">
+    <h1>¿Sientes que hay algo que necesitas decirle a Dios, pero no encuentras las palabras?</h1>
+    <p class="subtext">Hay una oración que Dios ya preparó para ti.<br>Solo falta que la encuentres.</p>
+
+    <button class="cta-btn" onclick="goToQuiz()">
+      Descubre tu oración
+      <svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </button>
+
+    <button class="secondary-link" onclick="goToApp()">ya descubrí mi oración antes</button>
+  </div>
+</div>
+
+<script>
+  function track(eventName, params) {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', eventName, params || {});
+    }
+  }
+
+  function goToQuiz() {
+    track('ViewContent', { content_name: 'presell_to_quiz' });
+    window.location.href = 'quiz.html';
+  }
+
+  function goToApp() {
+    track('ViewContent', { content_name: 'returning_user' });
+    window.location.href = 'https://TU-APP-REAL.vercel.app';
+  }
+</script>
+
+</body>
+</html>
