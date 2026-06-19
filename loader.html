@@ -91,48 +91,6 @@ fbq('track', 'PageView');
     max-width: 380px;
   }
 
-  .audio-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--bg-card);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 16px;
-    width: 100%;
-    max-width: 340px;
-  }
-
-  .audio-bar svg {
-    width: 16px;
-    height: 16px;
-    stroke: var(--accent-light);
-    fill: none;
-    flex-shrink: 0;
-  }
-
-  .audio-track {
-    flex: 1;
-    height: 3px;
-    background: var(--track);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .audio-fill {
-    height: 100%;
-    background: #b8895a;
-    border-radius: 2px;
-    width: 0%;
-  }
-
-  .audio-time {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    min-width: 32px;
-    text-align: right;
-  }
-
   .progress-wrap {
     width: 100%;
     max-width: 340px;
@@ -173,19 +131,12 @@ fbq('track', 'PageView');
   <p class="main-text" id="main-text">Estoy preparando tu oración.</p>
   <p class="sub-text">Dios ya conoce tu corazón. Lo que vas a recibir es solo para ti.</p>
 
-  <div class="audio-bar">
-    <svg id="play-icon" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-    <div class="audio-track"><div class="audio-fill" id="audio-fill"></div></div>
-    <span class="audio-time" id="audio-time">0:00</span>
-  </div>
-
   <div class="progress-wrap">
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
     <span class="progress-status" id="progress-status">Encendiendo una vela por ti...</span>
   </div>
 </div>
 
-<audio id="loader-audio" src="assets/loader-narracion.mp3" preload="auto"></audio>
 
 <script>
   function track(eventName, params) {
@@ -206,25 +157,8 @@ fbq('track', 'PageView');
     'Casi lista...'
   ];
 
-  const audio = document.getElementById('loader-audio');
-  const audioFill = document.getElementById('audio-fill');
-  const audioTime = document.getElementById('audio-time');
-
-  audio.addEventListener('timeupdate', () => {
-    if (audio.duration) {
-      const pct = (audio.currentTime / audio.duration) * 100;
-      audioFill.style.width = pct + '%';
-      const seconds = Math.floor(audio.currentTime);
-      audioTime.textContent = '0:' + (seconds < 10 ? '0' + seconds : seconds);
-    }
-  });
-
-  audio.play().catch(() => {
-    // Autoplay bloqueado por el navegador: el progreso visual sigue igual sin audio.
-  });
-
   let progress = 0;
-  const totalDuration = 4500;
+  const totalDuration = 1800;
   const stepTime = 80;
   const totalSteps = totalDuration / stepTime;
   let step = 0;
