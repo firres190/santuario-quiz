@@ -195,7 +195,7 @@ fbq('track', 'PageView');
   function finishLoader() {
     track('ViewContent', { content_name: 'loader_completado' });
     const appParams = new URLSearchParams({ nombre, santo, peticion, parentesco, esParaOtro: esParaOtro ? '1' : '0' });
-    window.location.href = 'https://san-rafael-app.vercel.app/prueba-app.html?' + appParams.toString();
+    window.location.href = 'https://san-rafael-app.vercel.app/?' + appParams.toString();
   }
 </script>
 
