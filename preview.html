@@ -255,7 +255,7 @@ fbq('track', 'PageView');
     document.getElementById('loading-block').style.display = 'flex';
 
     try {
-      const res = await fetch('https://TU-APP-REAL.vercel.app/api/oracion-prueba', {
+      const res = await fetch('https://san-rafael-app.vercel.app/api/oracion-prueba', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre, santo, peticion, parentesco, esParaOtro })
