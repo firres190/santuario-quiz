@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santuario Divino | Tu oración</title>
+
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+
+<style>
+  :root {
+    --bg: #080E17;
+    --bg-card: rgba(255,255,255,0.04);
+    --border: rgba(218,165,32,0.25);
+    --text-primary: #F5EDD6;
+    --text-secondary: #C8B89A;
+    --text-tertiary: #A08060;
+    --accent: #DAA520;
+    --accent-dark: #7a2e22;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .brand {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .name-tag {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+
+  .loading-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  .gen-dot { width:7px; height:7px; border-radius:50%; background: var(--accent); animation: gdot 1.2s ease-in-out infinite; }
+  .gen-dot:nth-child(2) { animation-delay: .2s; }
+  .gen-dot:nth-child(3) { animation-delay: .4s; }
+  @keyframes gdot { 0%,100%{opacity:.3;transform:scale(.8)} 50%{opacity:1;transform:scale(1)} }
+  .dots-row { display: flex; gap: 6px; }
+
+  .loading-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 1.25rem;
+    display: none;
+  }
+
+  .card.show { display: block; }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .card-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 16px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .cta-block {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .cta-block.show { display: flex; }
+
+  .cta-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 380px;
+  }
+
+  .price-line {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 26px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .cta-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--bg);
+    padding: 15px 32px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  .cta-btn:active { transform: scale(0.98); }
+
+  .features {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .check { color: #6ab97a; }
+
+  .error-block {
+    display: none;
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .error-block.show { display: block; }
+
+  .retry-btn {
+    margin-top: 1rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand-row">
+    <div class="brand">✦ Santuario Divino</div>
+    <div class="name-tag" id="name-tag"></div>
+  </div>
+
+  <div class="loading-block" id="loading-block">
+    <div class="dots-row">
+      <div class="gen-dot"></div><div class="gen-dot"></div><div class="gen-dot"></div>
+    </div>
+    <p class="loading-text">Preparando tu oración...</p>
+  </div>
+
+  <div class="error-block" id="error-block">
+    <p>No pudimos preparar tu oración en este momento.</p>
+    <button class="retry-btn" onclick="generarPrueba()">Intentar de nuevo</button>
+  </div>
+
+  <div class="card" id="result-card">
+    <div class="card-label" id="card-label">Tu oración personalizada</div>
+    <p class="card-text" id="card-text"></p>
+  </div>
+
+  <div class="cta-block" id="cta-block">
+    <p class="cta-text">Esta es tu primera oración, generada solo para ti. Con acceso completo puedes generar oraciones ilimitadas, guardarlas, descargarlas y volver cuando lo necesites.</p>
+    <div class="features">
+      <div class="feature-item"><span class="check">✓</span> Oraciones ilimitadas, cualquier día</div>
+      <div class="feature-item"><span class="check">✓</span> Descargar y guardar tus oraciones</div>
+      <div class="feature-item"><span class="check">✓</span> Diario espiritual y modo Silencio</div>
+      <div class="feature-item"><span class="check">✓</span> Acceso de por vida, pago único</div>
+    </div>
+    <p class="price-line">$7</p>
+    <button class="cta-btn" onclick="goToCheckout()">Quiero acceso completo</button>
+  </div>
+</div>
+
+<script>
+  function track(eventName, params) {
+    if (typeof fbq !== 'undefined') fbq('track', eventName, params || {});
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const nombre = params.get('nombre') || '';
+  const santo = params.get('santo') || 'San Rafael Arcángel';
+  const peticion = params.get('peticion') || '';
+  const parentesco = params.get('parentesco') || '';
+  const esParaOtro = params.get('esParaOtro') || '0';
+
+  if (nombre) {
+    document.getElementById('name-tag').textContent = nombre;
+  }
+
+  async function generarPrueba() {
+    document.getElementById('error-block').classList.remove('show');
+    document.getElementById('result-card').classList.remove('show');
+    document.getElementById('cta-block').classList.remove('show');
+    document.getElementById('loading-block').style.display = 'flex';
+
+    try {
+      const res = await fetch('https://TU-APP-REAL.vercel.app/api/oracion-prueba', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, santo, peticion, parentesco, esParaOtro })
+      });
+      const data = await res.json();
+
+      document.getElementById('loading-block').style.display = 'none';
+
+      if (data.texto) {
+        document.getElementById('card-label').textContent = 'Tu oración a ' + santo;
+        document.getElementById('card-text').textContent = data.texto;
+        document.getElementById('result-card').classList.add('show');
+        document.getElementById('cta-block').classList.add('show');
+        track('ViewContent', { content_name: 'preview_oracion_generada' });
+      } else {
+        document.getElementById('error-block').classList.add('show');
+      }
+    } catch (e) {
+      document.getElementById('loading-block').style.display = 'none';
+      document.getElementById('error-block').classList.add('show');
+    }
+  }
+
+  function goToCheckout() {
+    track('InitiateCheckout', { value: 7, currency: 'USD' });
+    window.location.href = 'https://pay.hotmart.com/B105666252X';
+  }
+
+  generarPrueba();
+</script>
+
+</body>
+</html>

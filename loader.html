@@ -147,8 +147,17 @@ fbq('track', 'PageView');
   const nombre = params.get('nombre') || '';
   const santo = params.get('santo') || 'San Rafael Arcángel';
   const peticion = params.get('peticion') || '';
+  const parentesco = params.get('parentesco') || '';
+  const esParaOtro = params.get('esParaOtro') === '1';
 
-  const saludo = nombre ? `${nombre}, estoy preparando tu oración a ${santo}.` : `Estoy preparando tu oración a ${santo}.`;
+  let saludo;
+  if (esParaOtro && nombre) {
+    saludo = `Estoy preparando la oración a ${santo} para ${nombre}.`;
+  } else if (nombre) {
+    saludo = `${nombre}, estoy preparando tu oración a ${santo}.`;
+  } else {
+    saludo = `Estoy preparando tu oración a ${santo}.`;
+  }
   document.getElementById('main-text').textContent = saludo;
 
   const statusMessages = [
@@ -185,8 +194,8 @@ fbq('track', 'PageView');
 
   function finishLoader() {
     track('ViewContent', { content_name: 'loader_completado' });
-    const appParams = new URLSearchParams({ nombre, santo, peticion });
-    window.location.href = 'https://TU-APP-REAL.vercel.app/?' + appParams.toString();
+    const appParams = new URLSearchParams({ nombre, santo, peticion, parentesco, esParaOtro: esParaOtro ? '1' : '0' });
+    window.location.href = 'preview.html?' + appParams.toString();
   }
 </script>
 
