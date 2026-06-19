@@ -2,449 +2,221 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Santuario Divino — Tu compañero espiritual</title>
-<meta name="description" content="Genera oraciones personalizadas con IA junto a San Rafael, Santa Rita, San Miguel y más santos. Tu santuario espiritual siempre contigo.">
-<meta name="theme-color" content="#080E17">
-<link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santuario Divino | Tu oración personalizada</title>
+<meta name="description" content="Descubre la oración que Dios preparó para ti">
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'TU_PIXEL_ID_AQUI');
+fbq('track', 'PageView');
+</script>
+
 <style>
-.santos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem}
-.santo-card{background:rgba(255,255,255,0.04);border:1px solid rgba(184,134,11,0.18);border-radius:14px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s}
-.santo-card.selected{border-color:#DAA520;background:rgba(218,165,32,0.1)}
-.santo-emoji{font-size:22px;margin-bottom:5px}
-.santo-nombre{font-family:'Jost',sans-serif;font-size:13px;font-weight:500;color:#F5EDD6;line-height:1.2}
-.santo-esp{font-family:'Jost',sans-serif;font-size:11px;color:#A08060;margin-top:2px;line-height:1.3}
-.sugerencias-wrap{display:flex;flex-direction:column;gap:7px;margin-bottom:1.25rem}
-.sug-pill{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;color:#C8B89A;transition:all .2s;line-height:1.4}
-.sug-pill:hover{background:rgba(218,165,32,0.08);border-color:rgba(218,165,32,0.3);color:#F5EDD6}
-.gen-input-wrap{margin-bottom:1rem}
-.gen-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px;color:#F5EDD6;font-family:'Jost',sans-serif;font-size:14px;line-height:1.5;resize:none;outline:none;min-height:80px}
-.gen-input::placeholder{color:rgba(200,184,154,0.4)}
-.gen-input:focus{border-color:rgba(218,165,32,0.45)}
-.gen-loading{display:none;align-items:center;justify-content:center;gap:6px;padding:16px}
-.gen-loading.show{display:flex}
-.gen-dot{width:7px;height:7px;border-radius:50%;background:#DAA520;animation:gdot 1.2s ease-in-out infinite}
-.gen-dot:nth-child(2){animation-delay:.2s}
-.gen-dot:nth-child(3){animation-delay:.4s}
-@keyframes gdot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
-.gen-resultado{display:none;background:rgba(218,165,32,0.06);border:1px solid rgba(218,165,32,0.25);border-radius:16px;padding:18px;margin-top:1rem;margin-bottom:2rem}
-.gen-santo-label{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;color:#DAA520;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.gen-texto{font-family:'Cormorant Garamond',serif;font-size:16px;color:#F5EDD6;line-height:1.8;margin-bottom:14px;white-space:pre-wrap;word-break:break-word}
-.gen-acciones{display:flex;gap:8px}
-.gen-accion{flex:1;padding:10px 8px;background:transparent;border:1px solid rgba(218,165,32,0.25);border-radius:10px;font-family:'Jost',sans-serif;font-size:12px;color:#C8B89A;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
-.gen-accion:hover{background:rgba(218,165,32,0.1);border-color:rgba(218,165,32,0.45);color:#F5EDD6}
-.home-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem}
-.home-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(184,134,11,0.15);border-radius:12px;padding:14px;text-align:center}
-.home-stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;color:#DAA520;line-height:1}
-.home-stat-label{font-family:'Jost',sans-serif;font-size:11px;color:#A08060;margin-top:4px}
-.saved-prayer-wrap{padding:1.5rem 1.25rem}
-.saved-prayer-label{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;color:#DAA520;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
-.saved-prayer-texto{font-family:'Cormorant Garamond',serif;font-size:17px;color:#F5EDD6;line-height:1.85;margin-bottom:1.5rem}
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #171614;
+    --border: #3a3833;
+    --text-primary: #f5f1e8;
+    --text-secondary: #cfc9bc;
+    --text-tertiary: #8a8579;
+    --accent: #7a2e22;
+    --accent-light: #b8895a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-bg-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-bg-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+  }
+
+  .hero-bg-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6,5,4,0.7) 0%, rgba(6,5,4,0.82) 50%, rgba(6,5,4,0.97) 100%);
+  }
+
+  @media (max-width: 640px) {
+    .hero-bg-wrap img {
+      object-position: center 15%;
+    }
+    .hero-bg-wrap::after {
+      background: linear-gradient(180deg, rgba(6,5,4,0.55) 0%, rgba(6,5,4,0.72) 40%, rgba(6,5,4,0.98) 100%);
+    }
+    .hero-content {
+      justify-content: flex-end;
+      padding-bottom: 1rem;
+    }
+  }
+
+  .brand {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    z-index: 2;
+    text-transform: uppercase;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+    max-width: 560px;
+  }
+
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(24px, 5vw, 32px);
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 4px 24px rgba(0,0,0,0.7);
+  }
+
+  .subtext {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 380px;
+    text-shadow: 0 1px 10px rgba(0,0,0,0.6);
+  }
+
+  .cta-btn {
+    background: var(--accent);
+    border: none;
+    color: var(--text-primary);
+    padding: 16px 36px;
+    border-radius: 8px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.15s ease, background 0.15s ease;
+    font-family: inherit;
+    margin-top: 0.5rem;
+  }
+
+  .cta-btn:hover {
+    background: #8c3727;
+    transform: translateY(-1px);
+  }
+
+  .cta-btn:active {
+    transform: scale(0.98);
+  }
+
+  .secondary-link {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .arrow {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-content {
+      animation: fadeUp 0.9s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
 </style>
 </head>
 <body>
-<div class="bg">
-  <div class="bg-grad"></div><div class="bg-glow"></div><div class="bg-lines"></div>
-  <div class="particles"><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div></div>
-</div>
 
-<!-- WELCOME -->
-<div id="s-welcome" class="screen active">
-<div class="content"><div class="welcome-wrap">
-  <div class="logo-mark"><div class="halo"><div class="halo-inner">
-    <svg viewBox="0 0 80 80" width="62" height="62" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="40" cy="62" rx="22" ry="16" fill="#2D6A4F" opacity="0.9"/>
-      <path d="M22 55 Q40 75 58 55 Q50 70 40 72 Q30 70 22 55Z" fill="#1B4332"/>
-      <rect x="30" y="44" width="20" height="22" rx="4" fill="#F5EDD6"/>
-      <path d="M40 45 Q15 35 10 20 Q20 28 30 38Z" fill="#E8D5A3" opacity="0.9"/>
-      <path d="M40 45 Q65 35 70 20 Q60 28 50 38Z" fill="#E8D5A3" opacity="0.9"/>
-      <circle cx="40" cy="28" r="10" fill="#F5CBA7"/>
-      <path d="M31 24 Q33 16 40 15 Q47 16 49 24 Q46 18 40 18 Q34 18 31 24Z" fill="#C9A84C"/>
-      <circle cx="40" cy="22" r="13" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.8"/>
-      <circle cx="37" cy="27" r="1.2" fill="#7B5E3A"/>
-      <circle cx="43" cy="27" r="1.2" fill="#7B5E3A"/>
-      <path d="M37 31 Q40 33 43 31" stroke="#7B5E3A" stroke-width="1" fill="none" stroke-linecap="round"/>
-      <line x1="55" y1="42" x2="58" y2="70" stroke="#DAA520" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="55" cy="42" r="3" fill="#DAA520"/>
-    </svg>
-  </div></div></div>
-  <div class="ornament"><div class="orn-line"></div><div class="orn-diamond"></div><div class="orn-line right"></div></div>
-  <p class="app-eyebrow">Voces Espirituales</p>
-  <h1 class="app-title">Santuario<br><em>Divino</em></h1>
-  <p class="app-tagline">Oraciones únicas, generadas con IA devocional</p>
-  <div class="feature-list">
-    <div class="feature"><div class="feat-icon">✨</div><div class="feat-text"><p class="feat-title">IA entrenada con años de ministerio</p><p class="feat-sub">Miles de oraciones reales de Voces Espirituales — los patrones que más han tocado corazones</p></div></div>
-    <div class="feature"><div class="feat-icon">🙏</div><div class="feat-text"><p class="feat-title">6 santos y figuras sagradas</p><p class="feat-sub">San Rafael, Santa Rita, San Miguel, Virgen María y más</p></div></div>
-    <div class="feature"><div class="feat-icon">🎵</div><div class="feat-text"><p class="feat-title">Modo Silencio</p><p class="feat-sub">Frecuencias de sanación 432Hz, 528Hz, 639Hz y 852Hz</p></div></div>
-    <div class="feature"><div class="feat-icon">📔</div><div class="feat-text"><p class="feat-title">Diario espiritual</p><p class="feat-sub">Guarda tus reflexiones y momentos de gracia</p></div></div>
+<div class="hero">
+  <div class="hero-bg-wrap">
+    <picture>
+      <source media="(max-width: 640px)" srcset="jesus-cruz-movil.jpg">
+      <img src="jesus-cruz-pc.jpg" alt="Jesús cargando la cruz">
+    </picture>
   </div>
-  <div class="price-block">
-    <p class="price-eyebrow">Acceso completo y de por vida</p>
-    <p class="price-amount">$7</p>
-    <p class="price-note">Menos que un café · pago único · sin mensualidades</p>
-  </div>
-  <button class="btn-gold" onclick="goRegister()">ACCEDER AHORA</button>
-  <button class="btn-ghost" onclick="goLogin()">Ya soy miembro</button>
-</div></div>
-</div>
+  <div class="brand">Santuario Divino</div>
 
-<!-- AUTH -->
-<div id="s-auth" class="screen">
-<div class="content"><div class="auth-wrap">
-  <button class="back" onclick="show('s-welcome')">← Volver</button>
-  <h2 class="section-title">Acceder</h2>
-  <p class="section-sub">Ingresa tu correo y la contraseña que recibiste después de tu compra en Hotmart.</p>
-  <div class="field"><label class="field-label">Tu correo electrónico</label><input class="field-input" type="email" placeholder="tu@correo.com" id="inp-email" autocomplete="email"></div>
-  <div class="field"><label class="field-label">Contraseña de acceso</label><input class="field-input" type="password" placeholder="Tu contraseña de acceso" id="inp-password"></div>
-  <div id="auth-error" style="display:none;background:rgba(229,115,115,0.08);border:1px solid rgba(229,115,115,0.3);border-radius:8px;padding:0.875rem 1rem;margin-bottom:1rem;font-size:12px;color:#EF9A9A;line-height:1.6;">
-    Contraseña incorrecta. Revisa el correo que recibiste de Hotmart después de tu compra.
-  </div>
-  <div class="form-footer">
-    <button class="btn-gold" onclick="handleAuth()" id="auth-cta">ACCEDER A MI CUENTA →</button>
-  </div>
-</div></div>
-</div>
+  <div class="hero-content">
+    <h1>¿Sientes que hay algo que necesitas decirle a Dios, pero no encuentras las palabras?</h1>
+    <p class="subtext">Hay una oración que Dios ya preparó para ti.<br>Solo falta que la encuentres.</p>
 
-<!-- HOME -->
-<div id="s-home" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="home-header">
-      <div class="header-top">
-        <div><p class="greeting-small">Bienvenida de regreso</p><p class="greeting-name" id="home-name">María</p></div>
-        <div class="avatar" id="home-avatar">M</div>
-      </div>
-    </div>
+    <button class="cta-btn" onclick="goToQuiz()">
+      Descubre tu oración
+      <svg class="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </button>
 
-    <div class="home-stats">
-      <div class="home-stat">
-        <div class="home-stat-num" id="oraciones-count">0</div>
-        <div class="home-stat-label">Oraciones guardadas</div>
-      </div>
-      <div class="home-stat">
-        <div class="home-stat-num" id="diario-count">0</div>
-        <div class="home-stat-label">Entradas en diario</div>
-      </div>
-    </div>
-
-    <p class="section-eyebrow">✦ ¿A quién quieres dirigir tu oración?</p>
-    <div class="santos-grid" id="santos-grid"></div>
-
-    <p class="section-eyebrow">Sugerencias para hoy</p>
-    <div class="sugerencias-wrap" id="sugerencias-list"></div>
-
-    <p class="section-eyebrow">¿Por quién es esta oración?</p>
-    <div class="gen-input-wrap">
-      <input class="gen-input" type="text" id="gen-nombre" placeholder="Ej: mi mamá Rosa, yo mismo, mi hijo..." style="min-height:auto;padding:12px 14px;margin-bottom:10px">
-    </div>
-
-    <p class="section-eyebrow">¿Cuál es tu petición?</p>
-    <div class="gen-input-wrap">
-      <textarea class="gen-input" id="gen-input" placeholder="Ej: tiene cáncer y mañana es su operación, lleva meses sin trabajo, necesita sanación del corazón..." rows="3"></textarea>
-    </div>
-
-    <button class="btn-gold" id="gen-btn" onclick="generarOracion()">✦ Generar mi oración</button>
-
-    <div class="gen-loading" id="gen-loading">
-      <div class="gen-dot"></div><div class="gen-dot"></div><div class="gen-dot"></div>
-    </div>
-
-    <div class="gen-resultado" id="gen-resultado">
-      <div class="gen-santo-label">✦ <span id="gen-santo-label">Tu oración personalizada</span></div>
-      <p class="gen-texto" id="gen-texto"></p>
-      <div class="gen-acciones">
-        <button class="gen-accion" onclick="copiarOracion()">📋 Copiar</button>
-        <button class="gen-accion" onclick="guardarOracion()">♥ Guardar</button>
-        <button class="gen-accion" onclick="compartirOracion()">↗ Compartir</button>
-        <button class="gen-accion" onclick="nuevaOracion()">↺ Nueva</button>
-      </div>
-      <div id="result-verse" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(218,165,32,0.15);text-align:center">
-        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(240,230,200,0.65);line-height:1.7" id="result-verse-text"></p>
-        <p style="font-size:11px;color:#DAA520;margin-top:6px;letter-spacing:.5px" id="result-verse-ref"></p>
-      </div>
-    </div>
-
+    <button class="secondary-link" onclick="goToApp()">ya descubrí mi oración antes</button>
   </div>
 </div>
-<div class="nav">
-  <button class="nav-btn on" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
-  <button class="nav-btn" onclick="switchTab('diario')"><span class="nav-icon">📔</span><span class="nav-label">Diario</span></button>
-  <button class="nav-btn" onclick="switchTab('silencio')"><span class="nav-icon">🎵</span><span class="nav-label">Silencio</span></button>
-  <button class="nav-btn" onclick="switchTab('lista')"><span class="nav-icon">❤️</span><span class="nav-label">Mi Lista</span></button>
-  <button class="nav-btn" onclick="switchTab('perfil')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
-</div>
-</div>
-
-<!-- ORACIÓN GUARDADA (vista detalle) -->
-<div id="s-saved-prayer" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="player-top">
-      <button class="back" onclick="switchTab('lista')">← Volver</button>
-    </div>
-    <div class="saved-prayer-wrap">
-      <div class="saved-prayer-label" id="saved-santo-label">San Rafael · 6 de junio</div>
-      <p class="saved-prayer-texto" id="saved-texto"></p>
-      <button class="btn-gold" onclick="copiarOracionGuardada()">📋 Copiar oración</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- DIARIO -->
-<div id="s-diario" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="section-header"><p class="section-eyebrow">✦ Mi diario espiritual</p><h2 class="section-title-lg">Registra tu jornada</h2></div>
-    <div class="diary-new">
-      <p class="diary-prompt">¿Cómo fue tu oración de hoy?</p>
-      <textarea class="diary-input" id="diary-input" placeholder="Escribe aquí lo que recibiste, sentiste o quieres recordar..."></textarea>
-      <div class="diary-meta-row">
-        <span class="diary-date" id="diary-date"></span>
-        <button class="btn-gold-sm" onclick="saveDiaryEntry()">Guardar</button>
-      </div>
-    </div>
-    <div class="diary-entries" id="diary-entries"></div>
-  </div>
-</div>
-<div class="nav">
-  <button class="nav-btn" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
-  <button class="nav-btn on" onclick="switchTab('diario')"><span class="nav-icon">📔</span><span class="nav-label">Diario</span></button>
-  <button class="nav-btn" onclick="switchTab('silencio')"><span class="nav-icon">🎵</span><span class="nav-label">Silencio</span></button>
-  <button class="nav-btn" onclick="switchTab('lista')"><span class="nav-icon">❤️</span><span class="nav-label">Mi Lista</span></button>
-  <button class="nav-btn" onclick="switchTab('perfil')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
-</div>
-</div>
-
-<!-- SILENCIO -->
-<div id="s-silencio" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="section-header"><p class="section-eyebrow">✦ Modo silencio</p><h2 class="section-title-lg">Frecuencias de sanación</h2></div>
-    <div id="reproductor-silencio"></div>
-  </div>
-</div>
-<div class="nav">
-  <button class="nav-btn" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
-  <button class="nav-btn" onclick="switchTab('diario')"><span class="nav-icon">📔</span><span class="nav-label">Diario</span></button>
-  <button class="nav-btn on" onclick="switchTab('silencio')"><span class="nav-icon">🎵</span><span class="nav-label">Silencio</span></button>
-  <button class="nav-btn" onclick="switchTab('lista')"><span class="nav-icon">❤️</span><span class="nav-label">Mi Lista</span></button>
-  <button class="nav-btn" onclick="switchTab('perfil')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
-</div>
-</div>
-
-<!-- MI LISTA -->
-<div id="s-lista" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="section-header"><p class="section-eyebrow">✦ Mis oraciones guardadas</p><h2 class="section-title-lg">Mi Lista</h2></div>
-    <div id="lista-items"><p class="empty-state">Aún no has guardado oraciones. Genera una y toca "Guardar".</p></div>
-  </div>
-</div>
-<div class="nav">
-  <button class="nav-btn" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
-  <button class="nav-btn" onclick="switchTab('diario')"><span class="nav-icon">📔</span><span class="nav-label">Diario</span></button>
-  <button class="nav-btn" onclick="switchTab('silencio')"><span class="nav-icon">🎵</span><span class="nav-label">Silencio</span></button>
-  <button class="nav-btn on" onclick="switchTab('lista')"><span class="nav-icon">❤️</span><span class="nav-label">Mi Lista</span></button>
-  <button class="nav-btn" onclick="switchTab('perfil')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
-</div>
-</div>
-
-<!-- PERFIL -->
-<div id="s-perfil" class="screen">
-<div class="content">
-  <div class="scroll-area">
-    <div class="section-header"><p class="section-eyebrow">✦ Mi cuenta</p><h2 class="section-title-lg">Mi Perfil</h2></div>
-    <div class="profile-hero">
-      <div style="position:relative;display:inline-block;margin-bottom:12px">
-        <div class="profile-avatar" id="profile-avatar" onclick="editarFoto()" style="cursor:pointer">U</div>
-        <button onclick="editarFoto()" style="position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:#DAA520;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px">✏️</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:4px">
-        <p class="profile-name" id="profile-name">Usuario</p>
-        <button onclick="editarNombre()" style="background:none;border:none;cursor:pointer;color:#DAA520;font-size:14px;padding:2px">✏️</button>
-      </div>
-      <p class="profile-email" id="profile-email"></p>
-      <div class="membresia-badge">✦ Miembro activo · Acceso de por vida</div>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card"><p class="stat-num" id="stat-oraciones">0</p><p class="stat-label">Oraciones guardadas</p></div>
-      <div class="stat-card"><p class="stat-num" id="stat-diario">0</p><p class="stat-label">Entradas diario</p></div>
-    </div>
-    <div class="profile-section">
-      <p class="profile-section-title">🔔 Recordatorio de oración</p>
-      <div class="notif-row">
-        <input type="time" class="time-input" id="profile-notif-time" value="07:00">
-        <button class="btn-gold-sm" onclick="saveNotificationFromProfile()">Activar</button>
-      </div>
-      <p class="notif-status" id="profile-notif-status"></p>
-    </div>
-    <div class="profile-section">
-      <p class="profile-section-title">⚙️ Configuración</p>
-      <div class="profile-options">
-        <button class="profile-option" onclick="showToast('Gestiona tu membresía en Hotmart')">
-          <span>Gestionar membresía</span><span class="option-arrow">›</span>
-        </button>
-        <button class="profile-option" onclick="showToast('Próximamente disponible')">
-          <span>Ayuda y soporte</span><span class="option-arrow">›</span>
-        </button>
-        <button class="profile-option danger" onclick="cerrarSesion()">
-          <span>Cerrar sesión</span><span class="option-arrow">›</span>
-        </button>
-      </div>
-    </div>
-    <p class="app-version">Santuario Divino · Voces Espirituales · v1.0</p>
-  </div>
-</div>
-<div class="nav">
-  <button class="nav-btn" onclick="switchTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
-  <button class="nav-btn" onclick="switchTab('diario')"><span class="nav-icon">📔</span><span class="nav-label">Diario</span></button>
-  <button class="nav-btn" onclick="switchTab('silencio')"><span class="nav-icon">🎵</span><span class="nav-label">Silencio</span></button>
-  <button class="nav-btn" onclick="switchTab('lista')"><span class="nav-icon">❤️</span><span class="nav-label">Mi Lista</span></button>
-  <button class="nav-btn on" onclick="switchTab('perfil')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
-</div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<div id="loading-screen" style="display:none;position:fixed;inset:0;background:#080E17;z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;">
-  <svg viewBox="0 0 80 80" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="62" rx="22" ry="16" fill="#2D6A4F" opacity="0.9"/>
-    <rect x="30" y="44" width="20" height="22" rx="4" fill="#F5EDD6"/>
-    <path d="M40 45 Q15 35 10 20 Q20 28 30 38Z" fill="#E8D5A3" opacity="0.9"/>
-    <path d="M40 45 Q65 35 70 20 Q60 28 50 38Z" fill="#E8D5A3" opacity="0.9"/>
-    <circle cx="40" cy="28" r="10" fill="#F5CBA7"/>
-    <path d="M31 24 Q33 16 40 15 Q47 16 49 24 Q46 18 40 18 Q34 18 31 24Z" fill="#C9A84C"/>
-    <circle cx="40" cy="22" r="13" fill="none" stroke="#DAA520" stroke-width="1.5" opacity="0.8"/>
-  </svg>
-  <p style="font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;color:#A08060;text-transform:uppercase;">Entrando a tu santuario...</p>
-</div>
-
 
 <script>
-(function(){
-var BASE='https://pub-746efd393d9846fd89bdb01861e05686.r2.dev';
-var tracks=[
-  {hz:174,name:'Alivio del Dolor',desc:'Elimina el dolor · Seguridad',icon:'🩹',file:'174Hz%20Removes%20Pain%20Track1.mp3'},
-  {hz:285,name:'Campo de Energía',desc:'Sana tejidos · Regeneración',icon:'⚡',file:'285hz%20Heals%20Energy%20Field%20Track2.mp3'},
-  {hz:396,name:'Liberación del Miedo',desc:'Elimina culpa · Libera el miedo',icon:'🕊️',file:'396hz%20Removes%20Guilt%20%26%20Fear%20Track3.mp3'},
-  {hz:417,name:'Facilita el Cambio',desc:'Limpia traumas · Renovación',icon:'🔄',file:'417hz%20Facilitates%20Change%20Track4.mp3'},
-  {hz:432,name:'Frecuencia de la Tierra',desc:'Armonía natural · Paz interior',icon:'🌍',file:'432hz.mp3'},
-  {hz:528,name:'Frecuencia del Amor',desc:'Sanación celular · Milagros',icon:'✨',file:'528Hz.mp3'},
-  {hz:639,name:'Frecuencia del Corazón',desc:'Relaciones · Amor divino',icon:'💚',file:'639Hz.mp3'},
-  {hz:741,name:'Despierta la Intuición',desc:'Claridad mental · Expresión',icon:'🔮',file:'741hz%20Awakens%20Intuition%20Track8.mp3'},
-  {hz:852,name:'Frecuencia Espiritual',desc:'Despertar espiritual · Conciencia',icon:'🙏',file:'852hz.mp3'},
-  {hz:963,name:'Conexión con el Espíritu',desc:'Conciencia divina · Iluminación',icon:'☀️',file:'963hz%20Connect%20with%20Spirit%20Track10.mp3'},
-];
-var rAudio=new Audio();rAudio.loop=true;
-var rIdx=4,rPlaying=false,rTimerEnd=0,rTimerIv=null,rVizIv=null,rBars=[];
+  function track(eventName, params) {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', eventName, params || {});
+    }
+  }
 
-function buildPlayer(){
-  var el=document.getElementById('reproductor-silencio');
-  if(!el)return;
-  var html='<style>.rp-list{max-height:260px;overflow-y:auto;margin-bottom:12px}.rp-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid transparent;margin-bottom:5px;transition:background .15s}.rp-item:hover{background:rgba(218,165,32,0.07)}.rp-item.rp-active{background:rgba(218,165,32,0.12);border-color:rgba(218,165,32,0.3)}.rp-ic{width:34px;height:34px;border-radius:50%;background:rgba(218,165,32,0.1);border:1px solid rgba(218,165,32,0.18);display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}.rp-info{flex:1;min-width:0}.rp-hz{font-size:13px;font-weight:500;color:#DAA520}.rp-nm{font-size:12px;color:#F5EDD6;margin-top:1px}.rp-ds{font-size:11px;color:rgba(240,230,200,0.38);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rp-pbtn{width:28px;height:28px;border-radius:50%;background:#DAA520;border:none;cursor:pointer;color:#080E17;font-size:12px;flex:none}.rp-main{background:rgba(218,165,32,0.06);border:1px solid rgba(218,165,32,0.2);border-radius:14px;padding:14px}.rp-nw{text-align:center;margin-bottom:10px}.rp-nwhz{font-size:26px;font-weight:600;color:#DAA520;line-height:1}.rp-nwnm{font-size:13px;color:#F5EDD6;margin-top:3px}.rp-viz{height:36px;display:flex;align-items:center;justify-content:center;gap:3px;margin:8px 0}.rp-bar{width:3px;border-radius:2px;background:#DAA520;height:4px;opacity:.7}.rp-prog{height:4px;background:rgba(255,255,255,0.1);border-radius:4px;cursor:pointer;margin:6px 0 3px;position:relative}.rp-pfill{height:4px;background:#DAA520;border-radius:4px;width:0%;pointer-events:none}.rp-times{display:flex;justify-content:space-between;font-size:11px;color:rgba(240,230,200,0.38)}.rp-ctrls{display:flex;align-items:center;justify-content:center;gap:12px;margin:10px 0}.rp-cb{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);cursor:pointer;color:#F5EDD6;font-size:14px;display:flex;align-items:center;justify-content:center}.rp-cp{width:50px;height:50px;border-radius:50%;background:#DAA520;border:none;cursor:pointer;color:#080E17;font-size:20px;display:flex;align-items:center;justify-content:center}.rp-vol{display:flex;align-items:center;gap:8px;margin-top:6px}.rp-vs{flex:1;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.1);border-radius:3px;outline:none}.rp-vs::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#DAA520;cursor:pointer}.rp-timers{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}.rp-tb{flex:1;padding:6px 3px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;cursor:pointer;font-size:11px;color:rgba(240,230,200,0.55);text-align:center;min-width:46px}.rp-tb.rp-ta{background:rgba(218,165,32,0.15);border-color:#DAA520;color:#DAA520}.rp-tdisp{text-align:center;font-size:12px;color:#DAA520;margin-top:6px;display:none}.rp-tdisp.show{display:block}</style>';
-  html+='<div class="rp-list" id="rp-list">';
-  tracks.forEach(function(t,i){
-    html+='<div class="rp-item'+(i===rIdx?' rp-active':'')+'" id="rpi-'+i+'" onclick="rSel('+i+',false)"><div class="rp-ic">'+t.icon+'</div><div class="rp-info"><div class="rp-hz">'+t.hz+' Hz</div><div class="rp-nm">'+t.name+'</div><div class="rp-ds">'+t.desc+'</div></div><button class="rp-pbtn" onclick="event.stopPropagation();rSel('+i+',true)">▶</button></div>';
-  });
-  html+='</div>';
-  html+='<div class="rp-main"><div class="rp-nw"><div class="rp-nwhz" id="rp-hz">432 Hz</div><div class="rp-nwnm" id="rp-nm">Frecuencia de la Tierra</div></div>';
-  html+='<div class="rp-viz" id="rp-viz"></div>';
-  html+='<div class="rp-prog" id="rp-prog"><div class="rp-pfill" id="rp-pf"></div></div>';
-  html+='<div class="rp-times"><span id="rp-tc">0:00</span><span id="rp-tt">--:--</span></div>';
-  html+='<div class="rp-ctrls"><button class="rp-cb" onclick="rPrev()">⏮</button><button class="rp-cb" onclick="rSeek(-15)">↩15</button><button class="rp-cp" id="rp-play" onclick="rToggle()">▶</button><button class="rp-cb" onclick="rSeek(15)">↪15</button><button class="rp-cb" onclick="rNext()">⏭</button></div>';
-  html+='<div class="rp-vol"><span style="font-size:13px;color:rgba(240,230,200,0.45)">🔈</span><input type="range" class="rp-vs" id="rp-vs" min="0" max="100" value="80" oninput="rVol(this.value)"><span style="font-size:11px;color:rgba(240,230,200,0.38);min-width:28px;text-align:right" id="rp-vp">80%</span></div>';
-  html+='</div>';
-  html+='<div class="rp-timers"><button class="rp-tb rp-ta" id="rt0" onclick="rTimer(0)">Sin límite</button><button class="rp-tb" id="rt15" onclick="rTimer(15)">15 min</button><button class="rp-tb" id="rt30" onclick="rTimer(30)">30 min</button><button class="rp-tb" id="rt60" onclick="rTimer(60)">1 hora</button><button class="rp-tb" id="rt120" onclick="rTimer(120)">2 horas</button></div>';
-  html+='<div class="rp-tdisp" id="rp-tdisp">⏱ Restante: <span id="rp-tl"></span></div>';
-  el.innerHTML=html;
-  var viz=document.getElementById('rp-viz');
-  for(var b=0;b<18;b++){var bar=document.createElement('div');bar.className='rp-bar';viz.appendChild(bar);rBars.push(bar);}
-  document.getElementById('rp-prog').addEventListener('click',function(e){
-    if(!rAudio.duration)return;
-    var r=this.getBoundingClientRect();
-    rAudio.currentTime=((e.clientX-r.left)/r.width)*rAudio.duration;
-  });
-  rAudio.volume=0.8;
-  rSel(4,false);
-}
+  function goToQuiz() {
+    track('ViewContent', { content_name: 'presell_to_quiz' });
+    window.location.href = 'quiz.html';
+  }
 
-window.rSel=function(idx,autoplay){
-  document.querySelectorAll('.rp-item').forEach(function(el){el.classList.remove('rp-active')});
-  var item=document.getElementById('rpi-'+idx);
-  if(item)item.classList.add('rp-active');
-  rIdx=idx;
-  var t=tracks[idx];
-  var hzEl=document.getElementById('rp-hz');
-  var nmEl=document.getElementById('rp-nm');
-  if(hzEl)hzEl.textContent=t.hz+' Hz';
-  if(nmEl)nmEl.textContent=t.name;
-  var was=rPlaying;
-  rAudio.pause();
-  rAudio.src=BASE+'/'+t.file;
-  rAudio.load();
-  if(was||autoplay){rAudio.play().then(function(){rSetPlaying(true)}).catch(function(){});}
-  else rSetPlaying(false);
-};
-window.rToggle=function(){
-  if(!rAudio.src||rAudio.src===window.location.href){rSel(rIdx,true);return;}
-  if(rPlaying){rAudio.pause();rSetPlaying(false);}
-  else{rAudio.play().then(function(){rSetPlaying(true)}).catch(function(){});}
-};
-window.rPrev=function(){rSel((rIdx-1+tracks.length)%tracks.length,rPlaying);};
-window.rNext=function(){rSel((rIdx+1)%tracks.length,rPlaying);};
-window.rSeek=function(s){if(rAudio.duration)rAudio.currentTime=Math.max(0,Math.min(rAudio.currentTime+s,rAudio.duration));};
-window.rVol=function(v){rAudio.volume=v/100;var el=document.getElementById('rp-vp');if(el)el.textContent=v+'%';};
-window.rTimer=function(min){
-  document.querySelectorAll('.rp-tb').forEach(function(b){b.classList.remove('rp-ta')});
-  var btn=document.getElementById('rt'+(min===0?0:min));
-  if(btn)btn.classList.add('rp-ta');
-  if(rTimerIv)clearInterval(rTimerIv);
-  var disp=document.getElementById('rp-tdisp');
-  if(min===0){if(disp)disp.classList.remove('show');return;}
-  rTimerEnd=Date.now()+min*60000;
-  if(disp)disp.classList.add('show');
-  rTimerIv=setInterval(function(){
-    var left=rTimerEnd-Date.now();
-    if(left<=0){clearInterval(rTimerIv);rAudio.pause();rSetPlaying(false);if(disp)disp.classList.remove('show');document.getElementById('rt0').classList.add('rp-ta');}
-    else{var m=Math.floor(left/60000);var s=Math.floor((left%60000)/1000);var el=document.getElementById('rp-tl');if(el)el.textContent=m+'m '+(s<10?'0':'')+s+'s';}
-  },1000);
-};
-
-function rSetPlaying(v){
-  rPlaying=v;
-  var btn=document.getElementById('rp-play');
-  if(btn)btn.textContent=v?'⏸':'▶';
-  if(v)rStartViz();else rStopViz();
-}
-function rStartViz(){
-  rStopViz();
-  rVizIv=setInterval(function(){
-    rBars.forEach(function(b){b.style.height=(rPlaying?(Math.random()*26+4):4)+'px';});
-  },130);
-}
-function rStopViz(){if(rVizIv)clearInterval(rVizIv);rBars.forEach(function(b){b.style.height='4px';});}
-
-rAudio.addEventListener('timeupdate',function(){
-  if(!rAudio.duration)return;
-  var pct=(rAudio.currentTime/rAudio.duration)*100;
-  var pf=document.getElementById('rp-pf');
-  var tc=document.getElementById('rp-tc');
-  var tt=document.getElementById('rp-tt');
-  if(pf)pf.style.width=pct+'%';
-  if(tc)tc.textContent=rFmt(rAudio.currentTime);
-  if(tt)tt.textContent=rFmt(rAudio.duration);
-});
-rAudio.addEventListener('ended',function(){rNext();});
-
-function rFmt(s){if(isNaN(s))return'--:--';var m=Math.floor(s/60);var sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
-
-buildPlayer();
-})();
+  function goToApp() {
+    track('ViewContent', { content_name: 'returning_user' });
+    window.location.href = 'https://TU-APP-REAL.vercel.app';
+  }
 </script>
 
-<script src="app.js"></script>
 </body>
 </html>
