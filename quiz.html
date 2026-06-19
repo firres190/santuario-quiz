@@ -234,10 +234,40 @@ fbq('track', 'PageView');
       ]
     },
     {
+      id: 'destinatario',
+      text: '¿Esta oración es para ti o para otra persona?',
+      type: 'choice',
+      options: [
+        { label: 'Es para mí', tipo: 'personal' },
+        { label: 'Es para otra persona', tipo: 'otro' }
+      ]
+    },
+    {
       id: 'nombre',
       text: '¿Cómo te llamas? Tu oración llevará tu nombre.',
       type: 'text',
-      placeholder: 'Escribe tu nombre'
+      placeholder: 'Escribe tu nombre',
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal'
+    },
+    {
+      id: 'nombre_destinatario',
+      text: '¿Cómo se llama esa persona?',
+      type: 'text',
+      placeholder: 'Su nombre',
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro'
+    },
+    {
+      id: 'parentesco',
+      text: '¿Qué es esa persona para ti?',
+      type: 'choice',
+      options: [
+        'Mi madre o mi padre',
+        'Mi hijo o mi hija',
+        'Mi pareja',
+        'Un familiar cercano',
+        'Un amigo o amiga'
+      ],
+      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro'
     },
     {
       id: 'listo',
@@ -252,10 +282,16 @@ fbq('track', 'PageView');
 
   let currentIndex = 0;
 
+  function getVisibleQuestions() {
+    return questions.filter(q => !q.showIf || q.showIf(answers));
+  }
+
   function render() {
+    const visible = getVisibleQuestions();
+    const visibleIndex = visible.indexOf(questions[currentIndex]);
     const q = questions[currentIndex];
     const container = document.getElementById('quiz-container');
-    const progressPct = Math.round(((currentIndex) / questions.length) * 100);
+    const progressPct = Math.round((visibleIndex / visible.length) * 100);
 
     let breadcrumbHtml = '';
     if (currentIndex > 0 && answers.area_vida) {
@@ -281,7 +317,7 @@ fbq('track', 'PageView');
       <div class="fade-in" style="display:flex;flex-direction:column;align-items:center;gap:1.75rem;width:100%">
         <div class="progress-row">
           <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
-          <span class="progress-label">${currentIndex + 1} de ${questions.length}</span>
+          <span class="progress-label">${visibleIndex + 1} de ${visible.length}</span>
         </div>
         ${breadcrumbHtml}
         <p class="qtext">${q.text}</p>
@@ -318,6 +354,9 @@ fbq('track', 'PageView');
 
   function advance() {
     currentIndex++;
+    while (currentIndex < questions.length && questions[currentIndex].showIf && !questions[currentIndex].showIf(answers)) {
+      currentIndex++;
+    }
     if (currentIndex >= questions.length) {
       finishQuiz();
     } else {
@@ -329,13 +368,21 @@ fbq('track', 'PageView');
     track('Lead', { content_name: 'quiz_completado' });
 
     const santo = answers.area_vida && answers.area_vida.santo ? answers.area_vida.santo : 'San Rafael Arcángel';
-    const nombre = answers.nombre ? answers.nombre.label : '';
+    const esParaOtro = answers.destinatario && answers.destinatario.tipo === 'otro';
+
+    const nombre = esParaOtro
+      ? (answers.nombre_destinatario ? answers.nombre_destinatario.label : '')
+      : (answers.nombre ? answers.nombre.label : '');
+
     const peticion = answers.emocion ? answers.emocion.label : '';
+    const parentesco = esParaOtro && answers.parentesco ? answers.parentesco.label : '';
 
     const params = new URLSearchParams({
       nombre: nombre,
       santo: santo,
-      peticion: peticion
+      peticion: peticion,
+      parentesco: parentesco,
+      esParaOtro: esParaOtro ? '1' : '0'
     });
 
     window.location.href = 'loader.html?' + params.toString();
