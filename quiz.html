@@ -391,7 +391,11 @@ fbq('track', 'PageView');
 
   function setDestinatario(tipo) {
     answers.destinatario = { tipo };
-    render();
+    if (tipo === 'personal') {
+      advance();
+    } else {
+      render();
+    }
   }
 
   function setParentesco(label) {
