@@ -241,6 +241,29 @@ fbq('track', 'PageView');
 
   const answers = {};
 
+  const santosData = {
+    rafael: {
+      nombre: 'San Rafael Arcángel',
+      opciones: ['Por una enfermedad grave', 'Cuídame en el viaje', 'Calmar dolores de la mente']
+    },
+    miguel: {
+      nombre: 'San Miguel Arcángel',
+      opciones: ['Protección contra el mal', 'Liberar miedos y opresión espiritual', 'Fuerza en momentos de peligro']
+    },
+    rita: {
+      nombre: 'Santa Rita de Casia',
+      opciones: ['Una situación que parece sin salida', 'Recuperar algo que creí perdido', 'Un milagro en lo imposible']
+    },
+    maria: {
+      nombre: 'Virgen María',
+      opciones: ['Protección y bendición para mis hijos', 'Consuelo en el dolor y la tristeza', 'Unidad y paz en mi familia']
+    },
+    jesus: {
+      nombre: 'Jesús',
+      opciones: ['Perdón y reconciliación interior', 'Fuerza para cargar mi cruz', 'Confianza en momentos de duda']
+    }
+  };
+
   const questions = [
     {
       id: 'destinatario',
@@ -248,28 +271,14 @@ fbq('track', 'PageView');
       type: 'combo_destinatario'
     },
     {
-      id: 'area_vida',
-      text: '¿Qué es lo que más pesa en tu corazón hoy?',
-      type: 'choice',
-      showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal',
-      options: [
-        { label: 'Mi salud o la de alguien que amo', santo: 'San Rafael Arcángel' },
-        { label: 'Un miedo que no me deja en paz', santo: 'San Miguel Arcángel' },
-        { label: 'Mi familia o mis hijos', santo: 'Virgen María' },
-        { label: 'Algo que necesito perdonar o soltar', santo: 'Jesús' }
-      ]
+      id: 'santo_elegido',
+      text: '¿A qué santo deseas dirigir esta oración?',
+      type: 'santo_picker'
     },
     {
-      id: 'emocion',
-      text: 'Si pudieras decirle una sola frase a Dios ahora mismo, ¿cuál sería el sentimiento detrás?',
-      type: 'choice',
-      showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal',
-      options: [
-        'Ayúdame, ya no puedo más',
-        'Dame fuerzas para seguir',
-        'Perdóname o ayúdame a perdonar',
-        'Gracias, aunque esté sufriendo'
-      ]
+      id: 'peticion_especifica',
+      text: '¿Cuál es tu petición?',
+      type: 'peticion_picker'
     },
     {
       id: 'nombre',
@@ -277,19 +286,6 @@ fbq('track', 'PageView');
       type: 'text',
       placeholder: 'Escribe tu nombre',
       showIf: (a) => a.destinatario && a.destinatario.tipo === 'personal'
-    },
-    {
-      id: 'motivo_otro',
-      text: '¿Por qué deseas interceder por ella?',
-      type: 'choice',
-      showIf: (a) => a.destinatario && a.destinatario.tipo === 'otro',
-      options: [
-        { label: 'Por su salud', santo: 'San Rafael Arcángel' },
-        { label: 'Por su dinero o trabajo', santo: 'San Rafael Arcángel' },
-        { label: 'Por protección espiritual', santo: 'San Miguel Arcángel' },
-        { label: 'Por su paz y consuelo', santo: 'Virgen María' },
-        { label: 'Por una causa difícil', santo: 'Santa Rita de Casia' }
-      ]
     },
     {
       id: 'listo',
@@ -302,6 +298,8 @@ fbq('track', 'PageView');
       ]
     }
   ];
+
+
 
   let currentIndex = 0;
 
@@ -320,9 +318,8 @@ fbq('track', 'PageView');
     const qtext = (esParaOtroActual && q.textOtro) ? q.textOtro : q.text;
 
     let breadcrumbHtml = '';
-    const motivoRespondido = answers.area_vida || answers.motivo_otro;
-    if (currentIndex > 0 && motivoRespondido && q.id !== 'destinatario') {
-      breadcrumbHtml = `<p class="breadcrumb">Elegiste: ${motivoRespondido.label.toLowerCase()}</p>`;
+    if (answers.santo_elegido && q.id !== 'destinatario' && q.id !== 'santo_elegido') {
+      breadcrumbHtml = `<p class="breadcrumb">Oración a ${answers.santo_elegido.nombre}</p>`;
     }
 
     let bodyHtml = '';
@@ -347,6 +344,28 @@ fbq('track', 'PageView');
         </div>
         <button class="continue-btn" id="continue-btn-dest" style="margin-top:8px" disabled onclick="confirmDestinatario()">Continuar</button>
       `;
+    } else if (q.type === 'santo_picker') {
+      const seleccionado = answers.santo_elegido ? answers.santo_elegido.id : null;
+      bodyHtml = `<div class="options">` +
+        Object.keys(santosData).map(id => {
+          const s = santosData[id];
+          return `<button class="option-btn ${seleccionado === id ? 'selected-option' : ''}" onclick="setSantoElegido('${id}')">${s.nombre}</button>`;
+        }).join('') +
+        `</div>`;
+    } else if (q.type === 'peticion_picker') {
+      const santoId = answers.santo_elegido ? answers.santo_elegido.id : null;
+      const opciones = santoId ? santosData[santoId].opciones : [];
+      const mostrandoOtro = answers._mostrarOtroPeticion === true;
+      bodyHtml = `<div class="options">` +
+        opciones.map((op, i) =>
+          `<button class="option-btn" onclick="setPeticionEspecifica('${op.replace(/'/g, "\\'")}')">${op}</button>`
+        ).join('') +
+        `<button class="option-btn" onclick="mostrarCampoOtroPeticion()">Otro — escribir mi petición</button>` +
+        `</div>` +
+        `<div class="extra-fields" id="otro-peticion-wrap" style="display:${mostrandoOtro ? 'flex' : 'none'};margin-top:10px">
+          <textarea class="text-input" id="otro-peticion-input" placeholder="Escribe tu petición" rows="3" style="resize:none">${answers._otroPeticionTexto || ''}</textarea>
+          <button class="continue-btn" id="continue-btn-otro-peticion" disabled onclick="confirmarOtroPeticion()">Continuar</button>
+        </div>`;
     } else if (q.type === 'choice') {
       bodyHtml = `<div class="options">` +
         q.options.map((opt, i) => {
@@ -386,6 +405,19 @@ fbq('track', 'PageView');
       updateDestContinueBtn();
     }
 
+    if (q.type === 'peticion_picker' && answers._mostrarOtroPeticion) {
+      const otroInput = document.getElementById('otro-peticion-input');
+      const otroBtn = document.getElementById('continue-btn-otro-peticion');
+      if (otroInput && otroBtn) {
+        otroBtn.disabled = otroInput.value.trim().length === 0;
+        otroInput.addEventListener('input', () => {
+          answers._otroPeticionTexto = otroInput.value;
+          otroBtn.disabled = otroInput.value.trim().length === 0;
+        });
+        otroInput.focus();
+      }
+    }
+
     track('ViewContent', { content_name: 'quiz_pregunta_' + (visibleIndex + 1) });
   }
 
@@ -401,6 +433,28 @@ fbq('track', 'PageView');
   function setParentesco(label) {
     answers.parentesco = { label };
     render();
+  }
+
+  function setSantoElegido(id) {
+    answers.santo_elegido = { id, nombre: santosData[id].nombre };
+    advance();
+  }
+
+  function setPeticionEspecifica(texto) {
+    answers.peticion_especifica = { label: texto };
+    advance();
+  }
+
+  function mostrarCampoOtroPeticion() {
+    answers._mostrarOtroPeticion = true;
+    render();
+  }
+
+  function confirmarOtroPeticion() {
+    const texto = (answers._otroPeticionTexto || '').trim();
+    if (!texto) return;
+    answers.peticion_especifica = { label: texto };
+    advance();
   }
 
   function updateDestContinueBtn() {
@@ -461,22 +515,21 @@ fbq('track', 'PageView');
 
     const esParaOtro = answers.destinatario && answers.destinatario.tipo === 'otro';
 
-    const motivoRespondido = esParaOtro ? answers.motivo_otro : answers.area_vida;
-    const santo = motivoRespondido && motivoRespondido.santo ? motivoRespondido.santo : 'San Rafael Arcángel';
+    const santoId = answers.santo_elegido ? answers.santo_elegido.id : 'rafael';
+    const santoNombre = answers.santo_elegido ? answers.santo_elegido.nombre : 'San Rafael Arcángel';
 
     const nombre = esParaOtro
       ? (answers.nombre_destinatario ? answers.nombre_destinatario.label : '')
       : (answers.nombre ? answers.nombre.label : '');
 
-    const peticion = esParaOtro
-      ? (motivoRespondido ? motivoRespondido.label : '')
-      : (answers.emocion ? answers.emocion.label : '');
+    const peticion = answers.peticion_especifica ? answers.peticion_especifica.label : '';
 
     const parentesco = esParaOtro && answers.parentesco ? answers.parentesco.label : '';
 
     const params = new URLSearchParams({
       nombre: nombre,
-      santo: santo,
+      santoId: santoId,
+      santo: santoNombre,
       peticion: peticion,
       parentesco: parentesco,
       esParaOtro: esParaOtro ? '1' : '0'
