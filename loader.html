@@ -146,6 +146,7 @@ fbq('track', 'PageView');
   const params = new URLSearchParams(window.location.search);
   const nombre = params.get('nombre') || '';
   const santo = params.get('santo') || 'San Rafael Arcángel';
+  const santoId = params.get('santoId') || 'rafael';
   const peticion = params.get('peticion') || '';
   const parentesco = params.get('parentesco') || '';
   const esParaOtro = params.get('esParaOtro') === '1';
@@ -194,7 +195,7 @@ fbq('track', 'PageView');
 
   function finishLoader() {
     track('ViewContent', { content_name: 'loader_completado' });
-    const appParams = new URLSearchParams({ nombre, santo, peticion, parentesco, esParaOtro: esParaOtro ? '1' : '0' });
+    const appParams = new URLSearchParams({ nombre, santo, santoId, peticion, parentesco, esParaOtro: esParaOtro ? '1' : '0' });
     window.location.href = 'https://san-rafael-app.vercel.app/?' + appParams.toString();
   }
 </script>
